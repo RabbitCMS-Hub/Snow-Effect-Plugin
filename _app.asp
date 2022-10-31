@@ -18,31 +18,8 @@
 ' LAST UPDATE: 28.10.2022 15:33 @badursun
 '**********************************************
 
-'**********************************************
-' Class Structure for RabbitCMS PluginManagers
-' 	- Private and Public Variables
-' 	- class_register()
-' 	- LoadPanel()
-' 	- class_initialize()
-' 	- class_terminate()
-' 	- class_register()
-' 	- GET PluginCode()
-' 	- GET PluginName()
-' 	- GET PluginVersion()
-' 	- GET PluginCredits()
-
-' 	- YOUR SUB/FUNC/PROPERTY
-' 	- YOUR SUB/FUNC/PROPERTY
-' 	- YOUR SUB/FUNC/PROPERTY
-'**********************************************
-
-' Response.Charset = "UTF-8"
-' Response.Codepage = 65001
-' Response.codepage = 1254
-' Response.charset = "windows-1254"
-
 Class Snow_Effect_Plugin
-	Private PLUGIN_CODE, PLUGIN_DB_NAME, PLUGIN_NAME, PLUGIN_VERSION, PLUGIN_CREDITS, PLUGIN_GIT, PLUGIN_DEV_URL, PLUGIN_FILES_ROOT, PLUGIN_ICON, PLUGIN_REMOVABLE, PLUGIN_ROOT, PLUGIN_FOLDER_NAME
+	Private PLUGIN_CODE, PLUGIN_DB_NAME, PLUGIN_NAME, PLUGIN_VERSION, PLUGIN_CREDITS, PLUGIN_GIT, PLUGIN_DEV_URL, PLUGIN_FILES_ROOT, PLUGIN_ICON, PLUGIN_REMOVABLE, PLUGIN_ROOT, PLUGIN_FOLDER_NAME, PLUGIN_AUTOLOAD
 	Private STATUS
 
 	'---------------------------------------------------------------
@@ -91,15 +68,15 @@ Class Snow_Effect_Plugin
 				PLUGIN_PANEL_MASTER_HEADER This()
 			'------------------------------------------------------------------------------------------
 			.Write "<div class=""row"">"
-			.Write "    <div class=""col-lg-6 col-sm-12"">"
-			.Write 			QuickSettings("select", ""& PLUGIN_CODE &"_OPTION_1", "Buraya Title", "0#Seçenek 1|1#Seçenek 2|2#Seçenek 3", TO_DB)
-			.Write "    </div>"
-			.Write "    <div class=""col-lg-6 col-sm-12"">"
-			.Write 			QuickSettings("number", ""& PLUGIN_CODE &"_OPTION_2", "Buraya Title", "", TO_DB)
-			.Write "    </div>"
-			.Write "    <div class=""col-lg-12 col-sm-12"">"
-			.Write 			QuickSettings("tag", ""& PLUGIN_CODE &"_OPTION_3", "Buraya Title", "", TO_DB)
-			.Write "    </div>"
+			' .Write "    <div class=""col-lg-6 col-sm-12"">"
+			' .Write 			QuickSettings("select", ""& PLUGIN_CODE &"_OPTION_1", "Buraya Title", "0#Seçenek 1|1#Seçenek 2|2#Seçenek 3", TO_DB)
+			' .Write "    </div>"
+			' .Write "    <div class=""col-lg-6 col-sm-12"">"
+			' .Write 			QuickSettings("number", ""& PLUGIN_CODE &"_OPTION_2", "Buraya Title", "", TO_DB)
+			' .Write "    </div>"
+			' .Write "    <div class=""col-lg-12 col-sm-12"">"
+			' .Write 			QuickSettings("tag", ""& PLUGIN_CODE &"_OPTION_3", "Buraya Title", "", TO_DB)
+			' .Write "    </div>"
 			.Write "</div>"
 		End With
 	End Sub
@@ -119,29 +96,31 @@ Class Snow_Effect_Plugin
     	PLUGIN_VERSION 			= "1.0.0"
     	PLUGIN_GIT 				= "https://github.com/RabbitCMS-Hub/Snow-Effect-Plugin"
     	PLUGIN_DEV_URL 			= "https://adjans.com.tr"
-    	PLUGIN_FILES_ROOT 		= PLUGIN_VIRTUAL_FOLDER(This)
     	PLUGIN_ICON 			= "zmdi-pin-help"
     	PLUGIN_REMOVABLE 		= True
     	PLUGIN_CREDITS 			= "@badursun Anthony Burak DURSUN"
-    	PLUGIN_ROOT 			= PLUGIN_DIST_FOLDER_PATH(This)
     	PLUGIN_FOLDER_NAME 		= "Snow-Effect-Plugin"
-
     	PLUGIN_DB_NAME 			= ""
+    	PLUGIN_AUTOLOAD 		= True
+    	PLUGIN_FILES_ROOT 		= PLUGIN_VIRTUAL_FOLDER(This)
+    	PLUGIN_ROOT 			= PLUGIN_DIST_FOLDER_PATH(This)
     	'-------------------------------------------------------------------------------------
     	' PluginTemplate Main Variables
     	'-------------------------------------------------------------------------------------
 
     	STATUS = Cint( GetSettings(""&PLUGIN_CODE&"_ACTIVE", "0") )
 
-    	If STATUS = 1 Then 
-			PLUGIN_ADD_TO This, "JS", "js/snowfall.js"
-
-    	End If
-
     	'-------------------------------------------------------------------------------------
     	' PluginTemplate Register App
     	'-------------------------------------------------------------------------------------
     	class_register()
+
+    	'-------------------------------------------------------------------------------------
+    	' Hook Auto Load Plugin
+    	'-------------------------------------------------------------------------------------
+    	If STATUS = 1 AND PLUGIN_AUTOLOAD_AT("WEB") = True Then 
+			PLUGIN_ADD_TO This, "JS", "dist/js/snowfall.js"
+    	End If
 	End Sub
 	'---------------------------------------------------------------
 	' Class First Init
@@ -172,9 +151,10 @@ Class Snow_Effect_Plugin
 	Public Property Get PluginRoot() 		: PluginRoot = PLUGIN_ROOT 					: End Property
 	Public Property Get PluginFolderName() 	: PluginFolderName = PLUGIN_FOLDER_NAME 	: End Property
 	Public Property Get PluginDBTable() 	: PluginDBTable = IIf(Len(PLUGIN_DB_NAME)>2, "tbl_plugin_"&PLUGIN_DB_NAME, "") 	: End Property
+	Public Property Get PluginAutoload() 	: PluginAutoload = PLUGIN_AUTOLOAD 			: End Property
 
 	Private Property Get This()
-		This = Array(PluginCode, PluginName, PluginVersion, PluginGit, PluginDevURL, PluginFolder, PluginIcon, PluginRemovable, PluginCredits, PluginRoot, PluginFolderName, PluginDBTable )
+		This = Array(PluginCode, PluginName, PluginVersion, PluginGit, PluginDevURL, PluginFolder, PluginIcon, PluginRemovable, PluginCredits, PluginRoot, PluginFolderName, PluginDBTable, PluginAutoload)
 	End Property
 	'---------------------------------------------------------------
 	' Plugin Defines
