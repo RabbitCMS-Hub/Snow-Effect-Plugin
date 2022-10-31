@@ -58,45 +58,6 @@ Class Snow_Effect_Plugin
 			Exit Property
 		End If
 
-		' Check And Create Table
-		'------------------------------
-		Dim PluginTableName
-			PluginTableName = "tbl_plugin_" & PLUGIN_DB_NAME
-    	
-   '  	If TableExist(PluginTableName) = False Then
-			' DebugTimer ""& PLUGIN_CODE &" table creating"
-    		
-   '  		Conn.Execute("SET NAMES utf8mb4;") 
-   '  		Conn.Execute("SET FOREIGN_KEY_CHECKS = 0;") 
-    		
-   '  		Conn.Execute("DROP TABLE IF EXISTS `"& PluginTableName &"`")
-
-   '  		q="CREATE TABLE `"& PluginTableName &"` ( "
-   '  		q=q+"  `ID` int(11) NOT NULL AUTO_INCREMENT, "
-   '  		q=q+"  `FILENAME` varchar(255) DEFAULT NULL, "
-   '  		q=q+"  `FULL_PATH` varchar(255) DEFAULT NULL, "
-   '  		q=q+"  `COMPRESS_DATE` datetime DEFAULT NULL, "
-   '  		q=q+"  `COMPRESS_RATIO` double(255,0) DEFAULT NULL, "
-   '  		q=q+"  `ORIGINAL_FILE_SIZE` bigint(20) DEFAULT 0, "
-   '  		q=q+"  `COMPRESSED_FILE_SIZE` bigint(20) DEFAULT 0, "
-   '  		q=q+"  `EARNED_SIZE` bigint(20) DEFAULT 0, "
-   '  		q=q+"  `ORIGINAL_PROTECTED` int(1) DEFAULT 0, "
-   '  		q=q+"  PRIMARY KEY (`ID`), "
-   '  		q=q+"  KEY `IND1` (`FILENAME`) "
-   '  		q=q+") ENGINE=MyISAM DEFAULT CHARSET=utf8; "
-			' Conn.Execute(q)
-
-   '  		Conn.Execute("SET FOREIGN_KEY_CHECKS = 1;") 
-
-			' ' Create Log
-			' '------------------------------
-   '  		Call PanelLog(""& PLUGIN_CODE &" için database tablosu oluşturuldu", 0, ""& PLUGIN_CODE &"", 0)
-
-			' ' Register Settings
-			' '------------------------------
-			' DebugTimer ""& PLUGIN_CODE &" class_register() End"
-   '  	End If
-
 		' Register Settings
 		'------------------------------
 		a=GetSettings("PLUGIN:"& PLUGIN_CODE &"", PLUGIN_CODE)
@@ -123,16 +84,6 @@ Class Snow_Effect_Plugin
 	'---------------------------------------------------------------
 	Public sub LoadPanel()
 		'--------------------------------------------------------
-		' Sub Page 
-		'--------------------------------------------------------
-		If Query.Data("Page") = "SHOW:CachedFiles" Then
-			Call PluginPage("Header")
-
-			Call PluginPage("Footer")
-			Call SystemTeardown("destroy")
-		End If
-
-		'--------------------------------------------------------
 		' Main Page
 		'--------------------------------------------------------
 		With Response
@@ -148,17 +99,6 @@ Class Snow_Effect_Plugin
 			.Write "    </div>"
 			.Write "    <div class=""col-lg-12 col-sm-12"">"
 			.Write 			QuickSettings("tag", ""& PLUGIN_CODE &"_OPTION_3", "Buraya Title", "", TO_DB)
-			.Write "    </div>"
-			.Write "</div>"
-
-			.Write "<div class=""row"">"
-			.Write "    <div class=""col-lg-12 col-sm-12"">"
-			.Write "        <a open-iframe href=""ajax.asp?Cmd=PluginSettings&PluginName="& PLUGIN_CODE &"&Page=SHOW:CachedFiles"" class=""btn btn-sm btn-primary"">"
-			.Write "        	Önbelleklenmiş Dosyaları Göster"
-			.Write "        </a>"
-			.Write "        <a open-iframe href=""ajax.asp?Cmd=PluginSettings&PluginName="& PLUGIN_CODE &"&Page=DELETE:CachedFiles"" class=""btn btn-sm btn-danger"">"
-			.Write "        	Tüm Önbelleği Temizle"
-			.Write "        </a>"
 			.Write "    </div>"
 			.Write "</div>"
 		End With
